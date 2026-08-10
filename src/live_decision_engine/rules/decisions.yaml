@@ -78,7 +78,7 @@ action_stages:
   size_recommend: [product_intro, try_on]
   fabric_demo: [try_on, trust]
   detail_show: [product_intro, try_on]
-  comparison: [trust, conversion]
+  comparison: [try_on, trust, conversion]
   try_on: [product_intro, try_on]
   scarcity: [conversion]
   no_conversion: [conversion]
