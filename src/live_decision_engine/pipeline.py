@@ -1,9 +1,11 @@
+import sys
 from pathlib import Path
 
 from live_decision_engine.cleaning.cleaner import clean_transcript
 from live_decision_engine.decision.engine import decide
 from live_decision_engine.event.extractor import extract_events
 from live_decision_engine.ingestion.adapter import load_session
+from live_decision_engine.llm import LLMClient
 from live_decision_engine.segmentation.segmenter import segment_lines
 from live_decision_engine.validation.scorer import score_cards
 
@@ -33,10 +35,40 @@ def read_jsonl(path: Path, model) -> list:
     return items
 
 
+def _resolve_llm(llm):
+    """把 llm 参数解析为可用的 LLM 客户端（或 None）。
+
+    - True: 实例化 LLMClient；不可用时向 stderr 警告并回退 None
+    - 已具备 available 属性的客户端对象（duck-typing）: 原样透传
+    - False/None: 不启用
+    """
+    if llm is True:
+        client = LLMClient()
+        if not client.available:
+            if not client.api_key:
+                print(
+                    "[WARN] --llm 已启用但未配置 LDE_LLM_API_KEY，回退到纯规则路径",
+                    file=sys.stderr,
+                )
+            else:
+                print(
+                    "[WARN] --llm 已启用但未安装 openai，回退到纯规则路径"
+                    "（pip install 'live-decision-engine[llm]'）",
+                    file=sys.stderr,
+                )
+            return None
+        return client
+    if isinstance(llm, bool) or llm is None:
+        return None
+    if hasattr(llm, "available"):
+        return llm
+    return None
+
+
 def run_pipeline(
     session_dir: Path,
     from_stage: str | None = None,
-    llm: bool = False,
+    llm: bool | object = False,
     out_dir: Path | None = None,
 ) -> dict:
     from live_decision_engine.schemas.cards import DecisionCard
@@ -47,27 +79,29 @@ def run_pipeline(
     stages = out_dir / "stages"
     stages.mkdir(parents=True, exist_ok=True)
 
+    client = _resolve_llm(llm)
+
     if from_stage in (None, "01"):
         data = load_session(session_dir)
-        cleaned = clean_transcript(data.transcript, llm=llm)
+        cleaned = clean_transcript(data.transcript, llm=client)
         write_jsonl(stages / STAGE_FILES["01"], cleaned)
 
     if from_stage in (None, "01", "02"):
         cleaned = read_jsonl(stages / STAGE_FILES["01"], CleanedLine)
-        segments = segment_lines(cleaned, llm=llm)
+        segments = segment_lines(cleaned, llm=client)
         write_jsonl(stages / STAGE_FILES["02"], segments)
 
     if from_stage in (None, "01", "02", "03"):
         segments = read_jsonl(stages / STAGE_FILES["02"], Segment)
         data = load_session(session_dir)
-        events = extract_events(segments, data.chat, llm=llm)
+        events = extract_events(segments, data.chat, llm=client)
         write_jsonl(stages / STAGE_FILES["03"], events)
 
     if from_stage in (None, "01", "02", "03", "04"):
         events = read_jsonl(stages / STAGE_FILES["03"], LiveEvent)
         data = load_session(session_dir)
-        cards = decide(events, data.products, llm=llm)
-        scored = score_cards(cards, llm=llm)
+        cards = decide(events, data.products, llm=client)
+        scored = score_cards(cards, llm=client)
         write_jsonl(stages / STAGE_FILES["04"], scored)
 
     if from_stage not in (None, "01", "02", "03", "04"):
