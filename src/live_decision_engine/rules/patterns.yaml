@@ -1,0 +1,56 @@
+patterns:
+  - id: p_question_size
+    source: chat
+    regex: "(尺码|多大码|什么码|有.{0,8}码|穿什么|能穿吗|合不合身)"
+    event_type: user_question
+    confidence: 0.9
+  - id: p_question_price
+    source: chat
+    regex: "(多少钱|什么价格|贵不贵|便宜吗|怎么卖)"
+    event_type: user_question
+    confidence: 0.85
+  - id: p_question_generic
+    source: chat
+    regex: "(怎么买|哪里拍|链接|发货|退换|七天无理由)"
+    event_type: user_question
+    confidence: 0.8
+  - id: p_intro
+    source: segment
+    regex: "(今天.{0,12}(款|件|裙子|衣服|裤子|外套)|给大家介绍|这个(款|版型|颜色)|上链接|过款)"
+    event_type: product_intro
+    confidence: 0.85
+  - id: p_selling_point
+    source: segment
+    regex: "(面料|材质|版型|做工|走线|防晒|显瘦|百搭|不透|舒服)"
+    event_type: selling_point
+    confidence: 0.8
+  - id: p_promotion
+    source: segment
+    regex: "(优惠|折扣|立减|领券|满.{0,4}减|秒杀|买.{0,4}送|福利)"
+    event_type: promotion
+    confidence: 0.85
+  - id: p_scarcity
+    source: segment
+    regex: "(最后.{0,6}(件|单|份)|限量|库存|卖完|抢|手速|拼单)"
+    event_type: scarcity
+    confidence: 0.85
+  - id: p_try_on
+    source: segment
+    regex: "(试穿|上身|换.{0,4}(码|件)|穿给你们看|直接穿)"
+    event_type: try_on
+    confidence: 0.85
+  - id: p_interaction
+    source: segment
+    regex: "(扣[0-9一二三]|公屏|评论区|打个.{0,4}(字|卡)|点关注|点点赞|有没有人)"
+    event_type: interaction_prompt
+    confidence: 0.8
+  - id: p_conversion
+    source: segment
+    regex: "(下单|拍下|已拍|加购|购物车|上车|链接拍)"
+    event_type: conversion_call
+    confidence: 0.8
+  - id: p_price_mention
+    source: segment
+    regex: "([0-9]+(\\.?[0-9]+)?(元|块)|到手.{0,4}[0-9]+)"
+    event_type: price_mention
+    confidence: 0.75

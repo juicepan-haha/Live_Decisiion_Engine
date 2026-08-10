@@ -1,0 +1,71 @@
+actions:
+  engagement_poll:
+    category: interaction
+    goal: "提高停留时长，活跃直播间"
+    trigger: "开场 或 在线人数下降 或 长时间无互动"
+    template: "刚进来的姐妹别划走！今天{product}这个价格，外面绝对买不到——想看的扣'看'"
+  height_poll:
+    category: interaction
+    goal: "激活互动 + 筛选用户身材信息"
+    trigger: "新品介绍时 或 需要了解用户身材分布"
+    template: "160以下的姐妹扣1，160以上的扣2，我看看多少人合适这件{product}"
+  question_prompt:
+    category: interaction
+    goal: "引导评论互动，收集用户关注点"
+    trigger: "介绍产品中 或 需要了解用户疑虑"
+    template: "姐妹们对{product}有什么问题直接打在公屏上，我一个一个回答！"
+  size_question:
+    category: size
+    goal: "降低尺码顾虑，减少购买阻力"
+    trigger: "用户询问尺码 或 进入成交阶段需打消最后顾虑"
+    template: "不确定尺码的姐妹告诉我身高体重，我帮你选！{product}不挑人但尺码一定要选对"
+  size_promise:
+    category: size
+    goal: "消除尺码风险，建立退换信心"
+    trigger: "用户犹豫尺码 或 有人问'穿不上怎么办'"
+    template: "尺码不合适直接退换！我们家支持7天无理由——{product}你大胆拍，回来试，不合适我出运费给你换"
+  size_recommend:
+    category: size
+    goal: "主动推荐尺码，减少决策时间"
+    trigger: "介绍了适用身材特征 或 多个尺码可选"
+    template: "听我的——{product}这款，120斤以下拍M，120-140拍L，140以上拍XL。我已经卖了上千件，尺码从来没出过错"
+  fabric_demo:
+    category: selling
+    goal: "展示面料质量，建立质感信任"
+    trigger: "介绍了面料材质 或 用户质疑质量"
+    template: "姐妹们感受一下{product}这个面料——拿到手一模就知道，跟商场几百块的一模一样。我们是源头工厂，同款面料供给品牌专柜"
+  detail_show:
+    category: selling
+    goal: "展示产品细节，强化卖点认知"
+    trigger: "开始展示产品 或 用户要求看细节"
+    template: "来——镜头拉近！看{product}这个走线、这个版型、这个收边，你自己放大看。这个做工，专柜没有五六百下不来"
+  comparison:
+    category: selling
+    goal: "竞品对比，建立价格优势认知"
+    trigger: "需要建立价格信任 或 用户说'某家更便宜'"
+    template: "外面同款{product}商场卖{price}，我们今天直播间直接一半都不到。因为我们是从工厂直接发，没有中间商赚差价"
+  try_on:
+    category: selling
+    goal: "上身展示真实效果"
+    trigger: "进入试穿展示阶段 或 用户想看上身效果"
+    template: "光说没用！直接给姐妹上身看效果——来，{product}这个版型，我穿你们看！"
+  scarcity:
+    category: conversion
+    goal: "制造稀缺感，加速下单决策"
+    trigger: "库存紧张 或 需要加速成交节奏"
+    template: "最后{stock}件了姐妹们！{product}这个价格出了直播间再也没有——拼手速！拍了直接打'已拍'"
+  no_conversion:
+    category: conversion
+    goal: "打破僵局，刺激沉寂期成交"
+    trigger: "一段时间无成交 或 观众犹豫不决"
+    template: "库存还有最后20件！{product}卖完直接过款——还没拍的姐妹别等了，这个价格你拿回去绝对不亏"
+  coupon_push:
+    category: conversion
+    goal: "优惠刺激，利用价格落差促单"
+    trigger: "需要价格刺激 或 价格较高需要优惠驱动"
+    template: "还没领券的姐妹，屏幕下方领券下单立减！到手只要{price}——这个券只剩最后几分钟了，领完即止"
+  last_call:
+    category: conversion
+    goal: "最后催单，制造错过恐惧"
+    trigger: "即将过款 或 倒计时阶段"
+    template: "拼手速了姐妹们！{product}最后上车机会，一分钟后就过款——拍了直接打'已拍'，没拍的抓紧了"

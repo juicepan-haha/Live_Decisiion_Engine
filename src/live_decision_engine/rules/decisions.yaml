@@ -1,0 +1,86 @@
+rules:
+  - id: rule_01
+    when: {event_type: user_question, keyword: "尺码|码|合身"}
+    action: size_question
+    priority: 90
+    detail: "用户询问尺码"
+  - id: rule_02
+    when: {event_type: user_question, keyword: "多少钱|价格|贵|便宜"}
+    action: comparison
+    priority: 85
+    detail: "用户询问价格"
+  - id: rule_03
+    when: {event_type: user_question}
+    action: question_prompt
+    priority: 55
+    detail: "用户提问，引导集中答疑"
+  - id: rule_04
+    when: {event_type: product_intro}
+    action: try_on
+    priority: 70
+    detail: "主播开始介绍新品"
+  - id: rule_05
+    when: {event_type: selling_point}
+    action: detail_show
+    priority: 70
+    detail: "主播陈述卖点"
+  - id: rule_06
+    when: {event_type: promotion}
+    action: scarcity
+    priority: 85
+    detail: "促销信号"
+  - id: rule_07
+    when: {event_type: scarcity}
+    action: scarcity
+    priority: 80
+    detail: "库存紧张"
+  - id: rule_08
+    when: {event_type: conversion_call}
+    action: no_conversion
+    priority: 70
+    detail: "成交阶段，紧跟催单"
+  - id: rule_09
+    when: {event_type: interaction_prompt}
+    action: question_prompt
+    priority: 60
+    detail: "主播引导互动，跟进提问收集关注点"
+  - id: rule_10
+    when: {event_type: price_mention}
+    action: comparison
+    priority: 75
+    detail: "提及价格，强化价格优势"
+
+fallback:
+  start: [engagement_poll]
+  attract: [engagement_poll]
+  product_intro: [height_poll, size_question, question_prompt, try_on]
+  try_on: [try_on, detail_show, fabric_demo, size_question]
+  trust: [comparison, fabric_demo, detail_show]
+  conversion: [scarcity, no_conversion, last_call, coupon_push, size_question]
+  follow_up: [scarcity, no_conversion, engagement_poll]
+
+stage_map:
+  product_intro: product_intro
+  selling_point: product_intro
+  try_on: try_on
+  promotion: conversion
+  scarcity: conversion
+  conversion_call: conversion
+  interaction_prompt: attract
+  user_question: product_intro
+
+action_stages:
+  engagement_poll: [start, attract]
+  height_poll: [product_intro]
+  question_prompt: [product_intro, try_on]
+  size_question: [product_intro, try_on, conversion]
+  size_promise: [product_intro, conversion]
+  size_recommend: [product_intro, try_on]
+  fabric_demo: [try_on, trust]
+  detail_show: [try_on]
+  comparison: [trust]
+  try_on: [try_on]
+  scarcity: [conversion]
+  no_conversion: [conversion]
+  coupon_push: [conversion]
+  last_call: [conversion]
