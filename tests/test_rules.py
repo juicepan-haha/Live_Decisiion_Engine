@@ -30,3 +30,13 @@ def test_action_stages():
     stages = load_action_stages()
     assert "size_question" in stages
     assert "conversion" in stages["scarcity"]
+
+
+def test_yaml_files_readable_as_package_data():
+    # 防打包回归：wheel 安装后 yaml 必须仍可作为包数据读取
+    from importlib.resources import files
+
+    rules_res = files("live_decision_engine.rules")
+    for name in ("patterns.yaml", "decisions.yaml", "actions.yaml"):
+        text = (rules_res / name).read_text(encoding="utf-8")
+        assert text.strip(), f"{name} 为空或不可读"
