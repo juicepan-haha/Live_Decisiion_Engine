@@ -1,0 +1,30 @@
+[
+  {
+    "product_id": "p001",
+    "name": "法式碎花连衣裙",
+    "price": 129,
+    "stock": 200,
+    "category": "连衣裙"
+  },
+  {
+    "product_id": "p002",
+    "name": "纯色防晒衬衫",
+    "price": 89,
+    "stock": 150,
+    "category": "衬衫"
+  },
+  {
+    "product_id": "p003",
+    "name": "高腰阔腿裤",
+    "price": 119,
+    "stock": 100,
+    "category": "裤装"
+  },
+  {
+    "product_id": "p004",
+    "name": "度假风针织开衫",
+    "price": 159,
+    "stock": 80,
+    "category": "外套"
+  }
+]
