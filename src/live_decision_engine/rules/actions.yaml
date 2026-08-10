@@ -33,7 +33,7 @@ actions:
     category: selling
     goal: "展示面料质量，建立质感信任"
     trigger: "介绍了面料材质 或 用户质疑质量"
-    template: "姐妹们感受一下{product}这个面料——拿到手一模就知道，跟商场几百块的一模一样。我们是源头工厂，同款面料供给品牌专柜"
+    template: "姐妹们感受一下{product}这个面料——你拿到手一模就知道，跟商场几百块的一模一样。我们是源头工厂，同款面料供给品牌专柜"
   detail_show:
     category: selling
     goal: "展示产品细节，强化卖点认知"
