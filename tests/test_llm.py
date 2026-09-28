@@ -42,6 +42,23 @@ def test_enhance_events_merges_and_dedups():
     assert ev.confidence == 0.95  # LLM 0.95 > 规则 0.8，去重后保留 LLM
 
 
+def test_llm_event_segment_ref_located_by_ts():
+    segs = [
+        Segment(segment_id="s_001", ts_start=0.0, ts_end=20.0, text="开场介绍。", line_refs=[0]),
+        Segment(segment_id="s_002", ts_start=20.0, ts_end=40.0, text="这件是冰丝面料。", line_refs=[1]),
+    ]
+
+    class LLM:
+        available = True
+
+        def chat_json(self, system, user):
+            return {"events": [{"ts": 35.0, "type": "selling_point", "content": "冰丝", "confidence": 0.95}]}
+
+    events = extract_events(segs, [], llm=LLM())
+    ev = next(e for e in events if e.type == "selling_point" and e.confidence == 0.95)
+    assert ev.segment_ref == "s_002"  # 按 ts 归位，而非 batch 首段
+
+
 def test_llm_failure_falls_back_to_rules():
     segs = [Segment(segment_id="s_001", ts_start=40.0, ts_end=50.0, text="这个面料是冰丝的。", line_refs=[0])]
     events = extract_events(segs, [], llm=FailingLLM())

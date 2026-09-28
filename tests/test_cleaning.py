@@ -26,6 +26,12 @@ def test_keeps_origin():
     assert out[0].origin == "嗯大家好"
 
 
+def test_merged_line_keeps_all_origins():
+    out = clean_transcript([_line(0.0, 5.0, "嗯嗯大家好"), _line(5.2, 5.6, "欢迎来")])
+    assert out[0].text == "大家好 欢迎来"
+    assert out[0].origin == "嗯嗯大家好 欢迎来"
+
+
 def test_drops_empty_after_clean():
     out = clean_transcript([_line(0.0, 2.0, "嗯嗯嗯")])
     assert out == []

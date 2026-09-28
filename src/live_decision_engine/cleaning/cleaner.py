@@ -46,7 +46,7 @@ def clean_transcript(lines: list[TranscriptLine], llm=None) -> list[CleanedLine]
             sep = "" if line.ts_start - prev_end <= 0 else " "
             out[-1] = CleanedLine(
                 ts_start=last.ts_start, ts_end=line.ts_end,
-                text=f"{last.text}{sep}{text}", origin=last.origin,
+                text=f"{last.text}{sep}{text}", origin=f"{last.origin}{sep}{line.text}",
             )
         else:
             out.append(

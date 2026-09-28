@@ -6,3 +6,6 @@ __pycache__/
 dist/
 build/
 demo/*/output/
+
+# Local runtime state
+database.db*

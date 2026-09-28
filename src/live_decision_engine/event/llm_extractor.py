@@ -10,6 +10,18 @@ _SYSTEM = (
 _BATCH = 5
 
 
+def _locate_segment(segments: list[Segment], ts: float) -> str | None:
+    best: str | None = None
+    best_gap = float("inf")
+    for seg in segments:
+        if seg.ts_start <= ts <= seg.ts_end:
+            return seg.segment_id
+        gap = min(abs(ts - seg.ts_start), abs(ts - seg.ts_end))
+        if gap < best_gap:
+            best, best_gap = seg.segment_id, gap
+    return best
+
+
 def enhance_events(
     events: list[LiveEvent],
     segments: list[Segment],
@@ -33,7 +45,7 @@ def enhance_events(
                     content=str(raw["content"]),
                     confidence=float(raw["confidence"]),
                     source="segment",
-                    segment_ref=batch[0].segment_id,
+                    segment_ref=_locate_segment(segments, float(raw["ts"])),
                 )
             except Exception:
                 continue

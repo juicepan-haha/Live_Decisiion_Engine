@@ -3,6 +3,8 @@ from live_decision_engine.decision.state import SessionState
 from live_decision_engine.schemas.inputs import Product
 from live_decision_engine.schemas.stages import LiveEvent
 
+import pytest
+
 
 PRODUCTS = [
     Product(product_id="p001", name="法式碎花连衣裙", price=129, stock=200, category="连衣裙"),
@@ -64,3 +66,31 @@ def test_fallback_after_silence():
     cards = decide(events, PRODUCTS)
     assert cards[0].trigger.rule_ref == "decisions.yaml#fallback"
     assert cards[0].action.name == "try_on"  # stage 推进到 try_on 后取 fallback[try_on] 首个候选
+
+
+def test_empty_products_raises():
+    events = [_evt(100.0, "user_question", "多少钱", "e_0001")]
+    with pytest.raises(ValueError, match="products.json 为空"):
+        decide(events, [])
+
+
+def test_price_question_card_survives_scoring():
+    # 回归：comparison 的 action_stages 必须覆盖 product_intro，否则价格询问卡被阈值静默过滤
+    from live_decision_engine.validation.scorer import score_cards
+
+    events = [_evt(100.0, "user_question", "多少钱", "e_0001")]
+    cards = decide(events, PRODUCTS)
+    scored = score_cards(cards)
+    assert len(scored) == 1
+    assert scored[0].action.name == "comparison"
+    assert scored[0].quality.score == 90  # 60+15(conf)+15(阶段匹配)
+
+
+def test_interaction_prompt_card_survives_scoring():
+    from live_decision_engine.validation.scorer import score_cards
+
+    events = [_evt(100.0, "interaction_prompt", "扣1支持", "e_0001")]
+    cards = decide(events, PRODUCTS)
+    scored = score_cards(cards)
+    assert len(scored) == 1
+    assert scored[0].action.name == "question_prompt"

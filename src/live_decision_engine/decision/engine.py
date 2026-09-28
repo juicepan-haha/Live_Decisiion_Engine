@@ -26,6 +26,8 @@ def decide(
     products: list[Product],
     llm=None,
 ) -> list[DecisionCard]:
+    if not products:
+        raise ValueError("products.json 为空：决策卡话术依赖商品信息，需至少一个商品")
     rules, fallback, stage_map = load_rules()
     actions = load_actions()
     state = SessionState(products)
